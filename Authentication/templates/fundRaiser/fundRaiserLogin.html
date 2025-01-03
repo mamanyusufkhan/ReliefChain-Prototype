@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <title>Fund Raiser Login</title>
+</head>
+    <body>
+      <div class="bg-[#90EE91] h-full flex items-center justify-center animate__animated animate__zoomIn">
+        <!-- login container -->
+        <div
+          class="bg-[#93C572] bg-opacity-70 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center"
+        >
+          <!-- form -->
+          <div class="md:w-1/2 px-8 md:px-16">
+            <h2 class="font-bold text-2xl text-white">Login</h2>
+            <p class="text-xs mt-4 text-white">
+              If you are already a Fund Raiser, log in
+            </p>
+
+            <form action="" method="POST" class="flex flex-col gap-4">
+              {% csrf_token %}
+              <input
+                class="p-2 mt-8 rounded-xl"
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Username"
+                required
+              />
+              <div class="relative">
+                <input
+                  class="p-2 rounded-xl border w-full"
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              {% for message in messages %}
+              <div style="color: red">{{message}}</div>
+              {% endfor %}
+              <button
+                class="bg-[#008080] rounded-xl text-white py-2 hover:scale-105 duration-300"
+                type="submit"
+              >
+                Login
+              </button>
+            </form>
+
+            <div class="mt-6 grid grid-cols-3 items-center text-white">
+              <hr class="border-gray-300" />
+              <p class="text-center text-sm">OR</p>
+              <hr class="border-gray-300" />
+            </div>
+            <div
+              class="mt-3 text-xs flex justify-between items-center text-[#002D74]"
+            >
+              <p class="text-white">Don't have an account?</p>
+              <button
+                class="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300"
+              >
+                <a
+                  href="/auth/fundRaiserRegister/"
+                  class="w3-bar-item w3-button"
+                  >Register</a
+                >
+              </button>
+            </div>
+          </div>
+
+          <!-- image -->
+          <div class="md:block hidden w-1/2">
+            <img
+              class="rounded-2xl"
+              src="https://img.freepik.com/free-vector/software-development-team-abstract-concept-illustration_335657-3872.jpg?w=826&t=st=1666109274~exp=1666109874~hmac=5746b1422d2990079faf27e7d7dfd94931773284c3c0344c043db85faa90969f"
+            />
+          </div>
+        </div>
+      </div>
+    </body>
+  </head>
+</html>

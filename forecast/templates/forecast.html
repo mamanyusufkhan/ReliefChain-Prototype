@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&family=Crimson+Text:wght@600&family=Croissant+One&family=Fira+Sans+Condensed:wght@100;200;300&family=Fira+Sans:wght@100;200&family=IBM+Plex+Sans+Arabic:wght@100;200;300&family=Inter:wght@300&family=Josefin+Sans:wght@300&family=Kenia&family=Kolker+Brush&family=Nanum+Gothic&family=Overpass&family=Poor+Story&family=Roboto+Condensed&family=Secular+One&family=Skranji&family=Work+Sans&display=swap"
+          rel="stylesheet">
+     <title>Flood Prediction</title>
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body style="background-color: rgb (194, 239, 231); font-family: 'Roboto Condensed', sans-serif; text-align: center;">
+     <nav id="nav" style="background-color: #36d3ae;">
+          <h2 style="font-size: 28px; color: #2c7f45; color: #fff; padding: 5px;">Flood Prediction</h2>
+     </nav>
+
+     <div style="display: flex; justify-content: space-between;">
+
+          <div style="flex: 0.7; padding: 20px; height: 100%;">
+
+               <div
+                    style="background-color: #fff; max-width: 100%; height: 100%; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+                    <canvas id="lineChart" style="font-family: 'Roboto Condensed', sans-serif;"></canvas>
+               </div>
+          </div>
+
+          <div style="flex: 0.3; padding: 20px; display: flex; flex-direction: column; align-items: center;
+          background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('../../static/images/pred.png');
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-color: rgba(255, 255, 255, 0.8);
+          margin-top: 20px;
+          max-width: 100%;
+          height: 69vh;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);">
+               <div class="details" style="text-align: left;">
+                    <!-- District -->
+                    <p><strong>District:</strong> {{ data.district }}</p>
+                    <!-- Start Date -->
+                    <p><strong>Start Date:</strong> {{ data.start_date }}</p>
+                    <!-- End Date -->
+                    <p><strong>End Date:</strong> {{ data.end_date }}</p>
+               </div>
+
+               <!-- Add some spacing -->
+               <div style="margin-top: 20px;"></div>
+
+               <!-- Add the table here -->
+               <!-- Add the table here within a div with a fixed height -->
+               <div class="table-container" style="height: 400px; overflow-y: auto;">
+                    <table class="severity-table" style="width: 25vw; text-align: center; border:2px solid #36d3ae;">
+                         <thead>
+                              <tr>
+                                   <th style="padding: 5px; background-color: #36d3ae; color: white;">Date</th>
+                                   <th style="padding: 5px; background-color: #36d3ae; color: white;">Severity of Flood
+                                   </th>
+                              </tr>
+                         </thead>
+                         <tbody id="severity-table-body">
+                              <!-- This section will be populated with data dynamically -->
+                         </tbody>
+                    </table>
+               </div>
+
+
+          </div>
+
+
+
+     </div>
+     <!-- Scripts -->
+     <!-- <script src="{%static 'assets/js/jquery.min.js' %}"></script>
+          <script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+          <script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+          <script src="{%static 'assets/js/browser.min.js' %}"></script>
+          <script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+          <script src="{%static 'assets/js/util.js' %}"></script> -->
+     <!-- <script src="{%static 'assets/js/main.js' %}"></script> -->
+     <script>
+          // Get a reference to the canvas element
+          var ctx = document.getElementById('lineChart').getContext('2d');
+          // Define your dynamic value (replace with your actual value)
+          // Define your dynamic value (replace with your actual value)
+          var dynamicValue = {{ data.range |safe }}; // Example value, replace with your value
+
+          // Register the custom plugin
+          Chart.register({
+               id: 'draw-red-line',
+               beforeDraw: function (chart, args, options) {
+                    var yAxis = chart.scales.y;
+                    var yPixel = yAxis.getPixelForValue(dynamicValue);
+                    var ctx = chart.ctx;
+
+                    // Draw a red line
+                    ctx.save();
+                    ctx.strokeStyle = 'red';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, yPixel);
+                    ctx.lineTo(chart.chartArea.right, yPixel);
+                    ctx.stroke();
+                    ctx.restore();
+               }
+          });
+
+
+          // Define your data (sample data for demonstration)
+          var dates = {{ data.dates| safe }}; // Replace with your date values
+          var dischargeData = {{ data.river_discharge| safe }}; // Replace with your river discharge data
+          var risk = {{ data.risk_index| safe }};
+
+          // Calculate the scaling factor for the y-axis
+          var maxDischarge = Math.max(...dischargeData);
+          var scaleFactor = Math.ceil(maxDischarge / 6); // Adjust the divisor for your scaling preference
+
+          // Scale the y-axis labels
+          var scaledLabels = Array.from({ length: 7 }, (_, i) => i * scaleFactor);
+
+          // Define the chart data
+          var data = {
+               labels: dates,
+               datasets: [{
+                    label: 'River Discharge (m^3/s)',
+                    data: dischargeData,
+                    borderColor: '#36d3ae',
+                    borderWidth: 2,
+                    fill: false,
+                    font: {
+                         family: 'Roboto Condensed, sans-serif', // Change this to your desired font
+                         weight: 'bold' // You can also specify the font weight if needed
+                    }
+               }]
+          };
+
+          // Define chart options
+          var options = {
+               responsive: true, // Keep this option as true to make the chart responsive
+               maintainAspectRatio: true,
+               scales: {
+                    x: {
+                         title: {
+                              display: true,
+                              text: 'Date',
+                              font: {
+                                   family: 'Roboto Condensed, sans-serif', // Change this to your desired font
+                                   weight: 'bold' // You can also specify the font weight if needed
+                              }
+                         },
+                         ticks: {
+                              font: {
+                                   family: 'Roboto Condensed, sans-serif', // Change this to your desired font
+                              }
+                         }
+                    },
+                    y: {
+                         title: {
+                              display: true,
+                              text: 'River Discharge (m^3/s)',
+                              font: {
+                                   family: 'Roboto Condensed, sans-serif', // Change this to your desired font
+                                   weight: 'bold' // You can also specify the font weight if needed
+                              }
+
+                         },
+                         ticks: {
+                              callback: function (value, index, values) {
+                                   // Display scaled y-axis labels
+                                   return scaledLabels[index];
+                              },
+                              font: {
+                                   family: 'Roboto Condensed, sans-serif', // Change this to your desired font
+                                   weight: 'bold' // You can also specify the font weight if needed
+                              }
+                         }
+                    }
+               },
+               plugins: {
+
+                    tooltip: {
+                         callbacks: {
+                              label: function (context) {
+                                   // Display the real discharge value in the tooltip
+                                   return context.dataset.label + ': ' + context.parsed.y;
+                              }
+                         }
+                    }
+               }
+          };
+
+          // Create the line chart
+          var lineChart = new Chart(ctx, {
+               type: 'line',
+               data: data,
+               options: options
+          });
+          function assignSeverity(value) {
+
+                return value
+          }
+
+          // Create an array to hold severity values based on dischargeData
+          
+          var severityValues = risk.map(assignSeverity);
+
+          // Get a reference to the table body
+          var tableBody = document.getElementById('severity-table-body');
+
+          // Populate the table dynamically
+          for (var i = 0; i < dates.length; i++) {
+               var row = document.createElement('tr');
+               var dateCell = document.createElement('td');
+        
+               dateCell.textContent = dates[i];
+               var severityCell = document.createElement('td');
+               severityCell.textContent = severityValues[i];
+               row.appendChild(dateCell);
+               row.appendChild(severityCell);
+               tableBody.appendChild(row);
+          }
+     </script>
+
+
+
+
+
+</body>
+
+</html>
+
+
+</body>
+
+</html>

@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&family=Crimson+Text:wght@600&family=Croissant+One&family=Fira+Sans+Condensed:wght@100;200;300&family=Fira+Sans:wght@100;200&family=IBM+Plex+Sans+Arabic:wght@100;200;300&family=Inter:wght@300&family=Josefin+Sans:wght@300&family=Kenia&family=Kolker+Brush&family=Nanum+Gothic&family=Oswald:wght@300&family=Overpass&family=Poor+Story&family=Roboto+Condensed&family=Secular+One&family=Skranji&family=Work+Sans&display=swap"
+		rel="stylesheet">
+	<title>Fund Raiser</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+	<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+	{% comment %} <noscript>
+		<link rel="stylesheet" href="{% static 'css/nonscript.css' %}" />
+	</noscript> {% endcomment %}
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div>
+
+		<!-- Header -->
+
+
+		<!-- Nav -->
+		<nav id="nav">
+			<ul>
+				{% comment %} <li><a href="#intro" class="active">Home</a></li>
+				<li><a href="#first">New Event</a></li> {% endcomment %}
+				<!-- <li><a href="#second">Events</a></li> -->
+				{% comment %} <li><a href="#cta">Fund Raiser</a></li> {% endcomment %}
+			</ul>
+      <h2 style="color:white; font-weight:bold; text-align:center">Flood Prediction</h2>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+	
+			<!-- First Section -->
+			<section id="first" class="main special">
+
+				<div style="display: flex; font-family: 'Roboto Condensed', sans-serif; ">
+
+					<!-- Start of the form -->
+          <div
+          class="event-form"
+          style="
+            flex: 0.6;
+            background-color: #feffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(113, 113, 113, 0.2);
+            color: black;
+            height: 300px;
+          "
+        >
+          <form
+            action="/forecast/form/"
+            method="post"
+            style="margin-bottom: 0"
+            onsubmit="return validateDates()"
+          >
+          {% csrf_token %}
+            <label for="district" style="margin-bottom: 8px">District</label>
+            <select
+              id="district"
+              name="district"
+              style="
+                font-family: 'Roboto Condensed', sans-serif;
+                font-size: 15px;
+                border-radius: 30px;
+                width: 100%;
+              "
+         
+            > 
+          <option>Select</option>
+              <option value="Dhaka">Dhaka</option>
+              <option value="Rajshahi">Rajshahi</option>
+              <option value="Sylhet">Sylhet</option>
+              <option value="Chattogram">Chittagong</option>
+              <!-- Add more categories as needed -->
+            </select>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+              <div style="flex: 1; margin-right: 10px ">
+                <label for="start-date">Start Date:</label>
+                <input
+                  type="date"
+                  id="start-date"
+                  name="start-date"
+                  pattern="\d{4}-\d{2}-\d{2}"
+                  style="border-radius: 30px; 
+                  width: 100%; padding:3px; "
+                  required
+                />
+              </div>
+              <br />
+              <div style="flex: 1; margin-right: 10px">
+                <label for="end-date">End Date:</label>
+                <input
+                  type="date"
+                  id="end-date"
+                  name="end-date"
+                  pattern="\d{4}-\d{2}-\d{2}"
+                  style="border-radius: 30px;
+                  width: 100%; padding:3px;"
+                  required
+                />
+              </div>
+            </div>
+    
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="submit-button"
+              style="
+                border-radius: 30px;
+                margin-top: 20px;
+                margin-bottom: 0;
+                background-color: #7affaf;
+          border: none;
+          
+              "
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+					<!-- End of the form -->
+					<div style="flex: 0.4; margin-bottom:30px;">
+						<img src="{% static 'images/bgrc.png' %}" alt="Your Image Description"
+							style="max-width: 700px; max-height:400px;">
+					</div>
+
+				</div>
+			</section>
+		</div>
+
+	
+	</div>
+  <script>
+    function validateDates() {
+        var startDateInput = document.getElementById("start-date");
+        var endDateInput = document.getElementById("end-date");
+
+        var startDate = new Date(startDateInput.value);
+        var endDate = new Date(endDateInput.value);
+        var today = new Date();
+
+      
+        // Check if end date is selected without selecting a start date
+        if (endDateInput.value !== '' && startDateInput.value === '') {
+            alert("Please select a start date before selecting an end date");
+            endDateInput.value = ''; // Clear the end date input
+            return false;
+        }
+
+        // Check if end date is earlier than the start date
+        if (endDate < startDate) {
+            alert("End date cannot be earlier than the start date");
+            endDateInput.value = ''; // Clear the end date input
+            return false;
+        }
+
+        return true;
+    }
+</script>
+	
+</body>
+
+</html>

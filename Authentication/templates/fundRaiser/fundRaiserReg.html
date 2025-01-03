@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <title>Fund Raiser Registration</title>
+    <body>
+      <section
+        class="bg-[#90EE91] min-h-screen flex items-center justify-center animate__animated animate__zoomIn"
+      >
+        <!-- login container -->
+        <div
+          class="bg-[#93C572] bg-opacity-80 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center"
+        >
+          <!-- form -->
+          <div class="md:w-1/2 px-8 md:px-16">
+            <h2 class="font-bold text-2xl text-white">Registration</h2>
+            <p class="text-xs mt-4 text-white">
+              New Fund Raiser? Create an account
+            </p>
+
+            <form method="POST" actions="" class="flex flex-col gap-4">
+              {% csrf_token %} {{form.username}} {{form.first_name}}
+              {{form.institution}} {{form.email}} {{form.password1}}
+              {{form.password2}}
+              <div style="color: red">
+                {{form.errors.username}} {{form.errors.password2}}
+              </div>
+              <input
+                type="submit"
+                class="bg-[#008080] rounded-xl text-white py-2 hover:scale-105 duration-300"
+                name="Create User"
+              />
+            </form>
+
+            <div class="mt-6 grid grid-cols-3 items-center text-white">
+              <hr class="border-gray-300" />
+              <p class="text-center text-sm">OR</p>
+              <hr class="border-gray-300" />
+            </div>
+            <div
+              class="mt-3 text-xs flex justify-between items-center  "
+            >
+              <p class="text-white">Already have an account?</p>
+              <button
+                type="submit"
+                class="bg-white py-2 px-5 rounded-xl hover:scale-110 duration-300 text-dark"
+              >
+                <a href="/auth/fundRaiserLogin/" class="w3-bar-item w3-button">Login</a>
+              </button>
+            </div>
+          </div>
+
+          <!-- image -->
+          <div class="md:block hidden w-1/2">
+            <img
+              class="rounded-2xl"
+              src="https://img.freepik.com/free-vector/admin-concept-illustration_114360-3427.jpg?w=826&t=st=1666106687~exp=1666107287~hmac=58ded704c5c04ff9f6ce4eb3a6ef8901e4bf4366923150325c0472f72f356c8a"
+            />
+          </div>
+        </div>
+      </section>
+    </body>
+  </head>
+</html>

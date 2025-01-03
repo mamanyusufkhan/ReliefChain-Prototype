@@ -1,0 +1,549 @@
+{% load static %}
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&family=Crimson+Text:wght@600&family=Croissant+One&family=Fira+Sans+Condensed:wght@100;200;300&family=Fira+Sans:wght@100;200&family=IBM+Plex+Sans+Arabic:wght@100;200;300&family=Inter:wght@300&family=Josefin+Sans:wght@300&family=Kenia&family=Kolker+Brush&family=Nanum+Gothic&family=Oswald:wght@300&family=Overpass&family=Poor+Story&family=Roboto+Condensed&family=Secular+One&family=Skranji&family=Work+Sans&display=swap"
+		rel="stylesheet">
+	<title>Fund Raiser</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+	<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+	<noscript>
+		<link rel="stylesheet" href="{% static 'css/nonscript.css' %}" />
+	</noscript>
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div>
+
+		<!-- Header -->
+
+
+		<!-- Nav -->
+		<nav id="nav">
+			<ul>
+				<li><a href="#intro" class="active">Home</a></li>
+				<li><a href="#first">New Event</a></li>
+				<!-- <li><a href="#second">Events</a></li> -->
+				<li><a href="#history">Fund Raiser</a></li>
+				<li><a href="/fundRaiser/donate">BDT {{wallet.amount}}</a></li>
+				<li><a href="{% url 'fundRaiserLogout' %}">LogOut</a></li>
+
+			</ul>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Introduction -->
+			<section id="intro" class="main">
+				<div class="events-container">
+					<!-- Wrapper for event boxes and image -->
+					<div class="event-image-wrapper">
+						<!-- Event Boxes -->
+						<div class="event-boxes" style="margin-top: -20px;">
+							{% for r in relief %}
+							<div class="event-box">
+								<h3 class="event-title" style="font-family: 'Roboto Condensed', sans-serif;">
+									{{r.Event_name}}</h3>
+								<p class="event-details" style="font-family: 'Roboto Condensed', sans-serif;">
+									{{r.Event_details}} </p>
+								<p class="event-timeline" style="font-family: 'Roboto Condensed', sans-serif;">
+										Minimum Amount to be Raised: {{r.Minimum_amount_to_be_raised}}</p>
+								<p class="event-timeline" style="font-family: 'Roboto Condensed', sans-serif;">
+									Amount to be Raised: {{r.Amount_to_be_raised}}</p>
+								<p class="event-timeline" style="font-family: 'Roboto Condensed', sans-serif;">
+										Current Amount: {{r.current_amount}}</p>
+								<p class="event-timeline" style="font-family: 'Roboto Condensed', sans-serif;">
+											Ends At: {{r.Ends_at}}</p>
+
+								<button class="donate-button"
+									style="background-color: rgb(255, 255, 255); font-family: 'Roboto Condensed', sans-serif; border-radius: 50px; font-weight: bold;">Edit</button>
+							</div>
+							{%endfor%}
+							<div class="add-event-box"
+								style="display: flex; justify-content: center; align-items: center; width: 100%;">
+								<a href="" class="add-event-button"
+									style="display: inline-block; padding: 10px 16px; background-color: #00722d; font-family: 'Roboto Condensed', sans-serif; border-radius: 50px; font-weight: bold; margin-left: -100px; color: #ffffff; text-align: center;font-size: 14px; margin-top: 10px;">
+									Create New Event +
+								</a>
+							</div>
+
+
+							<!-- Add more event boxes here -->
+						</div>
+						<!-- Image on the right -->
+						<div class="event-image">
+							<img src="{% static 'images/bgrc.png' %}" alt="Event Image" />
+						</div>
+					</div>
+				</div>
+			</section>
+
+			
+
+			<!-- First Section -->
+			<section id="first" class="main special">
+
+				<div style="display: flex; font-family: 'Roboto Condensed', sans-serif;">
+
+					<!-- Start of the form -->
+					<div class="event-form"
+						style="flex: 0.5; border: 4px solid green;background-color: #feffff; padding: 15px; border-radius: 10px; box-shadow: 0px 0px 15px rgba(113, 113, 113, 0.2);">
+						<h2 style="font-size: 24px; margin-bottom: 10px">Basic Details</h2>
+						<p style="font-size: 18px; margin-bottom: 20px;">This section contains details of your
+							event.</p>
+
+						<form action="/fundRaiser/" method="post" style="margin-bottom: 0;">
+							{% csrf_token %}
+							<!-- Event Name -->
+							<label for="eventName" style="margin-bottom: 8px;">Name of Event</label>
+							<input type="text" id="eventName" name="eventName" required
+								style="border-radius: 30px;font-family: 'Roboto Condensed', sans-serif;font-size: 15px; width: 100%;">
+
+							<!-- Event Description -->
+							<label for="eventDescription" style="margin-bottom: 8px;">Event Details</label>
+							<textarea id="eventDescription" name="eventDescription" rows="1" required
+								style="border-radius: 30px; width: 100%; font-family: 'Roboto Condensed', sans-serif;font-size: 15px;"></textarea>
+
+							<!-- Event Ends At (Date Picker) and Category on the same row -->
+							<div
+								style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 10px;">
+								<div style="flex: 1; margin-right: 10px;">
+									<!-- Event Ends At (Date Picker) -->
+									<label for="eventEndsAt" style="margin-bottom: 8px;">Ends At</label>
+									<input type="date" id="eventEndsAt" name="eventEndsAt"
+										min="{{ todayDate }}" required
+										style="border-radius: 30px; width: 100%; font-family: 'Roboto Condensed', sans-serif; font-size: 15px;">
+								</div>
+
+								<div style="flex: 1; margin-left: 10px;">
+									<!-- Event Category (Dropdown) -->
+									<label for="eventCategory" style="margin-bottom: 8px;">Category</label>
+									<select id="eventCategory" name="eventCategory"
+										style="font-family: 'Roboto Condensed', sans-serif;font-size: 15px; border-radius: 30px; width: 100%;">
+										<option value="category1">Category 1</option>
+										<option value="category2">Category 2</option>
+										<option value="category3">Category 3</option>
+										<!-- Add more categories as needed -->
+									</select>
+								</div>
+							</div>
+							<p id="endDateWarning" style="color: red; font-size: 14px; display: none;">End date
+								cannot be less than today's date.</p>
+
+							<!-- Event Division and District in the next line -->
+							<div
+								style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 10px;">
+								<div style="flex: 1; margin-right: 10px;">
+									<!-- Event Division -->
+									<label for="eventDivision" style="margin-bottom: 8px;">Division</label>
+									<select id="eventDivision" name="eventDivision" required
+										style="border-radius: 30px; width: 100%; font-family: 'Roboto Condensed', sans-serif; font-size: 15px;"
+										onchange="filterDistricts(this.value)">
+										<option value="" selected disabled>Select Division</option>
+										<option value="Dhaka">Dhaka</option>
+										<option value="Rajshahi">Rajshahi</option>
+										<option value="Rangpur">Rangpur</option>
+										<option value="Khulna">Khulna</option>
+										<option value="Barishal">Barishal</option>
+										<option value="Sylhet">Sylhet</option>
+										<option value="Chittagong">Chittagong</option>
+										<!-- Add more divisions as needed -->
+									</select>
+								</div>
+
+								<div style="flex: 1; margin-left: 10px;">
+									<!-- Event District -->
+									<label for="eventDistrict" style="margin-bottom: 8px;">District</label>
+									<select id="eventDistrict" name="eventDistrict" required
+										style="border-radius: 30px; width: 100%; font-family: 'Roboto Condensed', sans-serif; font-size: 15px;">
+										<option value="" selected disabled>Select District</option>
+										<!-- District options will be populated dynamically based on the selected division -->
+									</select>
+								</div>
+							</div>
+
+							<!-- Amount to be Raised -->
+							<label for="amountToBeRaised" style="margin-top: 10px;">Amount to be Raised</label>
+							<input type="number" id="amountToBeRaised" name="amountToBeRaised" required
+								style="border-radius: 30px; width: 100%; font-family: 'Roboto Condensed', sans-serif; font-size: 15px;">
+
+							<!-- Threshold -->
+							<label for="minimumAmount" style="margin-top: 10px;">Minimum Amount to be
+								Raised</label>
+							<input type="number" id="minimumAmount" name="minimumAmount" required
+								style="border-radius: 30px; width: 100%; font-family: 'Roboto Condensed', sans-serif; font-size: 15px;">
+							<p id="warning" style="color: red; font-size: 14px; display: none;">Minimum amount
+								cannot be greater than the amount to be raised.</p>
+
+							<!-- Submit Button -->
+							<button type="submit" class="submit-button"
+								style="border-radius: 30px; margin-top: 20px; margin-bottom: 0; background-color: #7affaf; color: #ffffff;">Submit</button>
+						</form>
+					</div>
+					 
+					 
+					<!-- End of the form -->
+					<div style="flex: 0.5;">
+						<img src="{% static 'images/bgrc.png' %}" alt="Your Image Description"
+							style="max-width: 90%;">
+					</div>
+
+				</div>
+
+				<!-- <ul class="features">
+		
+			  </ul>
+		   
+			  <footer class="major">
+				 <ul class="actions special">
+					<li><a href="generic.html" class="button">Learn More</a></li>
+				 </ul>
+			  </footer> -->
+			</section>
+			<section id="history" class="main special">
+				<header class="major" style="text-align: center;">
+					<h2 style="text-align: center; color: #1b3c1c; font-family: 'Roboto Condensed', sans-serif;">
+						Event History</h2>
+				</header>
+				<table class="donor-table"
+					style="margin: 0 auto; width: 80%; text-align: center;border: 2px solid green; color: #1b3c1c; font-family: 'Roboto Condensed', sans-serif;">
+					<thead>
+						<tr>
+							<th style="text-align: center; font-weight: bold; color: #28572a;">Event Name</th>
+							
+							<th style="text-align: center; font-weight: bold; color: #28572a;">Creation Date
+							</th>
+							<th style="text-align: center; font-weight: bold; color: #28572a;">Event Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Mock Data Rows -->
+						<tr>
+							<td style="text-align: center;">Sylhet Flood Fundraising</td>
+							
+							<td style="text-align: center;">2023-09-25 10:00 AM</td>
+							<td style="text-align: center;"><a href="#" style="text-align: center;">OnGoing</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">Chittagong Flood Fundraising</td>
+							
+							<td style="text-align: center;">2023-09-24 2:30 PM</td>
+							<td style="text-align: center;"><a href="#" style="text-align: center;">Completed</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">Dhaka Flood Fundraising</td>
+							
+							<td style="text-align: center;">2023-06-24 4:39 PM</td>
+							<td style="text-align: center;"><a href="#" style="text-align: center;">Completed</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">Sylhet Flood Fundraising</td>
+						
+							<td style="text-align: center;">2023-06-24 4:39 PM</td>
+							<td style="text-align: center;"><a href="#" style="text-align: center;">Completed</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">Sylhet Flood Fundraising</td>
+							
+							<td style="text-align: center;">2023-05-24 2:30 PM</td>
+							<td style="text-align: center;"><a href="#" style="text-align: center;">OnGoing</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: center;">Dhaka Flood Fundraising</td>
+							
+							<td style="text-align: center;">2022-09-24 1:30 PM</td>
+							<td style="text-align: center;"><a href="#" style="text-align: center;">Completed</a>
+							</td>
+						</tr>
+						<!-- Add more rows as needed -->
+					</tbody>
+				</table>
+			</section>
+
+			<!-- Second Section -->
+
+
+			<!-- Get Started -->
+
+
+		</div>
+
+		<!-- Footer -->
+		{% comment %} <footer id="footer">
+			<section>
+				<h2>Aliquam sed mauris</h2>
+				<p>Sed lorem ipsum dolor sit amet et nullam consequat feugiat consequat magna adipiscing tempus
+					etiam dolore veroeros. eget dapibus mauris. Cras aliquet, nisl ut viverra sollicitudin, ligula
+					erat egestas velit, vitae tincidunt odio.</p>
+				<ul class="actions">
+					<li><a href="generic.html" class="button">Learn More</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2>Etiam feugiat</h2>
+				<dl class="alt">
+					<dt>Address</dt>
+					<dd>1234 Somewhere Road &bull; Nashville, TN 00000 &bull; USA</dd>
+					<dt>Phone</dt>
+					<dd>(000) 000-0000 x 0000</dd>
+					<dt>Email</dt>
+					<dd><a href="#">information@untitled.tld</a></dd>
+				</dl>
+				<ul class="icons">
+					<li><a href="#" class="icon brands fa-twitter alt"><span class="label">Twitter</span></a></li>
+					<li><a href="#" class="icon brands fa-facebook-f alt"><span class="label">Facebook</span></a>
+					</li>
+					<li><a href="#" class="icon brands fa-instagram alt"><span class="label">Instagram</span></a>
+					</li>
+					<li><a href="#" class="icon brands fa-github alt"><span class="label">GitHub</span></a></li>
+					<li><a href="#" class="icon brands fa-dribbble alt"><span class="label">Dribbble</span></a>
+					</li>
+				</ul>
+			</section>
+			<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+		</footer> {% endcomment %}
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="{%static 'assets/js/jquery.min.js' %}"></script>
+	<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+	<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+	<script src="{%static 'assets/js/browser.min.js' %}"></script>
+	<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+	<script src="{%static 'assets/js/util.js' %}"></script>
+	<script src="{%static 'assets/js/main.js' %}"></script>
+	<script>document.addEventListener('DOMContentLoaded', function () {
+			// Get all event boxes
+			var eventBoxes = document.querySelectorAll('.event-boxes .event-box');
+
+			// Add a delay for each box to create a staggered effect
+			eventBoxes.forEach(function (box, index) {
+				setTimeout(function () {
+					box.classList.add('visible');
+				}, index * 250); // 250ms delay between each box
+			});
+		});
+	</script>
+	<script>
+		// This script adjusts the width of the donation progress bar based on the amount raised
+		function updateDonationProgress() {
+			const targetAmount = 2000;
+			const raisedAmount = 500; // You can fetch this dynamically from your backend or API
+
+			const percentageRaised = (raisedAmount / targetAmount) * 100;
+			const donationBar = document.getElementById('donationProgress');
+
+			donationBar.style.width = `${percentageRaised}%`;
+		}
+
+		// Call the function to set the progress initially
+		updateDonationProgress();
+	</script>
+	<script>
+		window.onload = function () {
+			setTimeout(function () {
+				document.querySelector('.add-event-box').classList.add('visible');
+			}, 1000); // transition starts 1 second after page load
+		}
+
+	</script>
+	<!-- Scripts -->
+	<script src="{%static 'assets/js/jquery.min.js' %}"></script>
+	<script src="{%static 'assets/js/jquery.scrollex.min.js' %}"></script>
+	<script src="{%static 'assets/js/jquery.scrolly.min.js' %}"></script>
+	<script src="{%static 'assets/js/browser.min.js' %}"></script>
+	<script src="{%static 'assets/js/breakpoints.min.js' %}"></script>
+	<script src="{%static 'assets/js/util.js' %}"></script>
+	<script src="{%static 'assets/js/main.js' %}"></script>
+	<script>document.addEventListener('DOMContentLoaded', function () {
+			// Get all event boxes
+			var eventBoxes = document.querySelectorAll('.event-boxes .event-box');
+
+			// Add a delay for each box to create a staggered effect
+			eventBoxes.forEach(function (box, index) {
+				setTimeout(function () {
+					box.classList.add('visible');
+				}, index * 250); // 250ms delay between each box
+			});
+		});
+	</script>
+	<script>
+		// This script adjusts the width of the donation progress bar based on the amount raised
+		function updateDonationProgress() {
+			const targetAmount = 2000;
+			const raisedAmount = 500; // You can fetch this dynamically from your backend or API
+
+			const percentageRaised = (raisedAmount / targetAmount) * 100;
+			const donationBar = document.getElementById('donationProgress');
+
+			donationBar.style.width = `${percentageRaised}%`;
+		}
+
+		// Call the function to set the progress initially
+		updateDonationProgress();
+	</script>
+	<script>
+		window.onload = function () {
+			setTimeout(function () {
+				document.querySelector('.add-event-box').classList.add('visible');
+			}, 1000); // transition starts 1 second after page load
+		}
+
+	</script>
+	<script>
+		// Get references to the input fields and the warning message
+		var amountToBeRaisedInput = document.getElementById('amountToBeRaised');
+		var minimumAmountInput = document.getElementById('minimumAmount');
+		var warningMessage = document.getElementById('warning');
+
+		// Add an event listener to the "Minimum Amount to be Raised" input
+		minimumAmountInput.addEventListener('input', function () {
+			// Convert the input values to numbers
+			var amountToBeRaised = parseFloat(amountToBeRaisedInput.value);
+			var minimumAmount = parseFloat(minimumAmountInput.value);
+
+			// Check if the minimum amount is greater than the amount to be raised
+			if (minimumAmount > amountToBeRaised) {
+				warningMessage.style.display = 'block';
+			} else {
+				warningMessage.style.display = 'none';
+			}
+		});
+	</script>
+	<script>
+		// Sample data of divisions and districts (replace with your data)
+		var divisionDistrictData = {
+    "Dhaka": [
+        "Dhaka", "Gazipur", "Tangail", "Madaripur", "Munshiganj", "Narayanganj", "Manikganj", "Rajbari", "Faridpur", "Gopalganj", "Shariatpur", "Kishoreganj", "Narsingdi"
+    ],
+    "Rajshahi": [
+        "Rajshahi", "Bogra", "Pabna", "Joypurhat", "Sirajganj", "Natore", "Naogaon", "Chapai Nawabganj"
+    ],
+    "Rangpur": [
+        "Rangpur", "Dinajpur", "Thakurgaon", "Panchagarh", "Kurigram", "Lalmonirhat", "Gaibandha"
+    ],
+    "Khulna": [
+        "Khulna", "Jessore", "Satkhira", "Bagerhat", "Chuadanga", "Jhenaidah", "Magura", "Kushtia", "Meherpur", "Narail"
+    ],
+    "Barishal": [
+        "Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalokati"
+    ],
+    "Sylhet": [
+        "Sylhet", "Moulvibazar", "Habiganj", "Sunamganj"
+    ],
+    "Chittagong": [
+        "Chattogram (Chittagong)", "Cox's Bazar", "Rangamati", "Khagrachhari", "Bandarban"
+    ]
+};
+
+	 
+		// Get references to the input and list elements
+		var divisionInput = document.getElementById('eventDivision');
+		var districtInput = document.getElementById('eventDistrict');
+		var divisionList = document.getElementById('divisionList');
+		var districtList = document.getElementById('districtList');
+	 
+		// Function to filter and display divisions based on user input
+		function filterDivisions(inputValue) {
+		    // Clear the previous list
+		    divisionList.innerHTML = '';
+		    districtList.innerHTML = ''; // Clear district list
+	 
+		    // Filter divisions based on user input
+		    var filteredDivisions = Object.keys(divisionDistrictData).filter(function (division) {
+			   return division.toLowerCase().startsWith(inputValue.toLowerCase());
+		    });
+	 
+		    // Display the filtered divisions in a dropdown
+		    filteredDivisions.forEach(function (division) {
+			   var listItem = document.createElement('li');
+			   listItem.textContent = division;
+			   listItem.style.cursor = 'pointer';
+	 
+			   // Handle division selection
+			   listItem.addEventListener('click', function () {
+				  divisionInput.value = division;
+				  divisionList.innerHTML = ''; // Clear the list
+				  filterDistricts(''); // Clear district input and list
+			   });
+	 
+			   divisionList.appendChild(listItem);
+		    });
+		}
+	 
+		// Function to filter and display districts based on selected division
+		// Function to filter and display districts based on selected division
+function filterDistricts(selectedDivision) {
+    // Get the district dropdown element
+    var districtDropdown = document.getElementById('eventDistrict');
+
+    // Clear the previous options
+    districtDropdown.innerHTML = '';
+
+    // Get the districts for the selected division from the divisionDistrictData object
+    var districts = divisionDistrictData[selectedDivision];
+
+    if (districts) {
+        // Add an option for each district
+        districts.forEach(function (district) {
+            var option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtDropdown.appendChild(option);
+        });
+    }
+}
+
+	 
+		// Close the dropdown when clicking outside
+		document.addEventListener('click', function (event) {
+		    if (event.target !== divisionInput && event.target !== divisionList && event.target !== districtInput && event.target !== districtList) {
+			   divisionList.innerHTML = '';
+			   districtList.innerHTML = '';
+		    }
+		});
+	 </script>
+	 <script>
+		// Get the elements
+		const eventEndsAtInput = document.getElementById('eventEndsAt');
+		const endDateWarning = document.getElementById('endDateWarning');
+
+		// Add an event listener to check the date
+		eventEndsAtInput.addEventListener('input', () => {
+			const selectedDate = new Date(eventEndsAtInput.value);
+			const today = new Date();
+
+			if (selectedDate < today) {
+				endDateWarning.style.display = 'block';
+				// Reset the date input to today
+				const todayISO = new Date().toISOString().split('T')[0];
+				eventEndsAtInput.value = todayISO;
+			} else {
+				endDateWarning.style.display = 'none';
+			}
+		});
+	</script>
+
+</body>
+
+</html>
